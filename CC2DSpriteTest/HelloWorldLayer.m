@@ -6,6 +6,7 @@
 //  Copyright James Wucher 2014. All rights reserved.
 //
 
+const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
 
 // Import the interfaces
 #import "HelloWorldLayer.h"
@@ -35,7 +36,7 @@
 	[scene addChild: layer];
    
    [scene addChild:[TouchLayer node]];
-	
+   
 	// return the scene
 	return scene;
 }
@@ -62,6 +63,7 @@
       
       self.monsters = [NSMutableArray array];
       self.player = nil;
+      secondsSinceLastUpdate = SECONDS_TO_UPDATE_MONSTERS;
 		
 		
 		//
@@ -148,14 +150,11 @@
       CGPoint location = [self locationFromTouch:touch];
       CCLOG(@"Touched at (%f,%f)",location.x,location.y);
       self.player.position = location;
-      playerMoved = YES;
    }
 }
 
 -(void)createPlayer
 {
-   playerMoved = NO;
-   
    if(self.player != nil)
    {
       [self removeChild:player];
@@ -195,7 +194,8 @@
 
 -(void)update:(ccTime)delta
 {
-   if(playerMoved)
+   secondsSinceLastUpdate += delta;
+   if(secondsSinceLastUpdate >= SECONDS_TO_UPDATE_MONSTERS)
    {  // Modify all the actions on all the monsters.
       CGPoint playerPos = player.position;
       for(CCSprite* sprite in monsters)
@@ -204,9 +204,9 @@
          float randomY = (1.0)*(arc4random()%50);
          CGPoint position = ccp(playerPos.x+randomX,playerPos.y+randomY);
          [sprite stopAllActions];
-         [sprite runAction:[CCMoveTo actionWithDuration:3.0 position:position]];
+         [sprite runAction:[CCMoveTo actionWithDuration:6.0 position:position]];
       }
-      playerMoved = NO;
+      secondsSinceLastUpdate = 0.0;
    }
 }
 
@@ -234,7 +234,6 @@
    [self createPlayer];
    [self createMonsters];
    [self scheduleUpdate];
-   playerMoved = YES;
 }
 
 -(void)onExitTransitionDidStart

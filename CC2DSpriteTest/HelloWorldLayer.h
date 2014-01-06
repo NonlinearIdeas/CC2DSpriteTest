@@ -17,7 +17,7 @@
 {
    CCSprite* player;
    NSMutableArray* monsters;
-   BOOL playerMoved;
+   float secondsSinceLastUpdate;
 }
 
 // NOTE:  This is for keeping references to the monsters ONLY.
