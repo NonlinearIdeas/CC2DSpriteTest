@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A2D79C01886AF390058B4FB /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D79BF1886AF390058B4FB /* arrow.png */; };
 		1A7794711879849800250C64 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7794701879849800250C64 /* QuartzCore.framework */; };
 		1A7794731879849800250C64 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7794721879849800250C64 /* OpenGLES.framework */; };
 		1A7794751879849800250C64 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7794741879849800250C64 /* OpenAL.framework */; };
@@ -145,6 +146,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A2D79BF1886AF390058B4FB /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		1A77946D1879849800250C64 /* CC2DSpriteTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CC2DSpriteTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A7794701879849800250C64 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1A7794721879849800250C64 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -506,6 +508,7 @@
 		1A7794851879849800250C64 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1A2D79BF1886AF390058B4FB /* arrow.png */,
 				1A7794861879849800250C64 /* Default.png */,
 				1A7794881879849800250C64 /* Default@2x.png */,
 				1A77948A1879849900250C64 /* Default-568h@2x.png */,
@@ -940,6 +943,7 @@
 				1A7794891879849800250C64 /* Default@2x.png in Resources */,
 				1A7794931879849900250C64 /* Icon-Small.png in Resources */,
 				1A77948F1879849900250C64 /* Icon-72.png in Resources */,
+				1A2D79C01886AF390058B4FB /* arrow.png in Resources */,
 				1A7794871879849800250C64 /* Default.png in Resources */,
 				1A7794911879849900250C64 /* Icon-Small-50.png in Resources */,
 				1A77949C1879849900250C64 /* iTunesArtwork in Resources */,
@@ -1175,6 +1179,7 @@
 				1A7796221879849B00250C64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

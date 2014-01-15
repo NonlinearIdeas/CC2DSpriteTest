@@ -15,6 +15,7 @@
 // HelloWorldLayer
 @interface HelloWorldLayer : CCLayer <GKAchievementViewControllerDelegate, GKLeaderboardViewControllerDelegate>
 {
+   CCSprite* arrow;
    CCSprite* player;
    NSMutableArray* monsters;
    float secondsSinceLastUpdate;
@@ -24,6 +25,7 @@
 // Actual memory retention is done by adding them to the layer.
 @property (nonatomic,retain) NSMutableArray* monsters;
 @property (nonatomic, retain) CCSprite* player;
+@property (nonatomic, retain) CCSprite* arrow;
 
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;

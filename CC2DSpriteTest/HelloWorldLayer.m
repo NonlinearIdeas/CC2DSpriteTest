@@ -22,6 +22,7 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
 
 @synthesize monsters;
 @synthesize player;
+@synthesize arrow;
 
 // Helper class method that creates a Scene with the HelloWorldLayer as the only child.
 +(CCScene *) scene
@@ -153,6 +154,20 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
    }
 }
 
+-(void)createArrow
+{
+   if(self.arrow != nil)
+   {
+      [self removeChild:arrow];
+      self.arrow = nil;
+   }
+   CGSize scrSize = [[CCDirector sharedDirector] winSize];
+   CCSprite* arrowSprite = [CCSprite spriteWithFile:@"arrow.png"];
+   arrowSprite.position = ccp(scrSize.width/2,scrSize.height/2);
+   [self addChild:arrowSprite];
+   self.arrow = arrowSprite;
+}
+
 -(void)createPlayer
 {
    if(self.player != nil)
@@ -163,7 +178,7 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
    CGSize scrSize = [[CCDirector sharedDirector] winSize];
    CCSprite* playerSprite = [CCSprite spriteWithFile:@"Icon.png"];
    playerSprite.scale = 2.0;
-   playerSprite.position = ccp(scrSize.width/2,scrSize.height/2);
+   playerSprite.position = ccp(scrSize.width/3,scrSize.height/3);
    [self addChild:playerSprite];
    self.player = playerSprite;
 }
@@ -192,7 +207,7 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
    }
 }
 
--(void)update:(ccTime)delta
+-(void)updatePlayerAndMonsters:(ccTime)delta
 {
    secondsSinceLastUpdate += delta;
    if(secondsSinceLastUpdate >= SECONDS_TO_UPDATE_MONSTERS)
@@ -208,6 +223,86 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
       }
       secondsSinceLastUpdate = 0.0;
    }
+}
+
+static inline float AdjustAngle(float angleRads)
+{
+   if(angleRads > M_PI)
+   {
+      while(angleRads > M_PI)
+      {
+         angleRads -= 2*M_PI;
+      }
+   }
+   else if(angleRads < -M_PI)
+   {
+      while(angleRads < -M_PI)
+      {
+         angleRads += 2*M_PI;
+      }
+   }
+   return angleRads;
+}
+
+static inline float Sign(float value)
+{
+   if(value >= 0)
+      return 1.0f;
+   return -1.0f;
+}
+
+//#define ROTATION_OPTION_1
+//#define ROTATION_OPTION_2
+#define ROTATION_OPTION_3
+
+-(void)updateArrow
+{
+   // Calculate the angle to the player
+   CGPoint toPlayer = ccpSub(self.player.position,self.arrow.position);
+   // Calculate the angle of this...Note there are some inversions
+   // and the actual image is rotated 90 degrees so I had to offset it
+   // a bit.
+   float angleToPlayerRads = -atan2f(toPlayer.y, toPlayer.x);
+   angleToPlayerRads = AdjustAngle(angleToPlayerRads);
+   
+   // This is the angle we "wish" the arrow would be pointing.
+   float targetAngle = CC_RADIANS_TO_DEGREES(angleToPlayerRads)+90;
+   float errorAngle = targetAngle-self.arrow.rotation;
+   
+   CCLOG(@"Error Angle = %f",errorAngle);
+   
+   
+#ifdef ROTATION_OPTION_1
+   // In this option, we just set the angle of the rotated sprite directly.
+   self.arrow.rotation = CC_RADIANS_TO_DEGREES(angleToPlayerRads)+90;
+#endif
+   
+   
+#ifdef ROTATION_OPTION_2
+   // In this option, we apply proportional feedback to the angle
+   // difference.
+   const float kProp = 0.05f;
+   self.arrow.rotation += kProp * (errorAngle);
+#endif
+   
+#ifdef ROTATION_OPTION_3
+   // The step to take each update in degrees.
+   const float kStep = 4.0f;
+   //  NOTE:  Without the "if(fabs(...)) check, the angle
+   // can "dither" around the zero point when it is very close.
+   if(fabs(errorAngle) > kStep)
+   {
+      self.arrow.rotation += Sign(errorAngle)*kStep;
+   }
+#endif
+}
+
+
+
+-(void)update:(ccTime)delta
+{
+   [self updatePlayerAndMonsters:delta];
+   [self updateArrow];
 }
 
 -(CGPoint)locationFromTouch:(UITouch*)touch
@@ -231,6 +326,7 @@ const float SECONDS_TO_UPDATE_MONSTERS = 0.5f;
     addObserver:self
     selector:@selector(touchNotif:)
     name:[[TouchLayer class] KEY_TOUCH_ENDED] object:nil];
+   [self createArrow];
    [self createPlayer];
    [self createMonsters];
    [self scheduleUpdate];
